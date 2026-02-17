@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>AI Tool Finder | Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/styles/dashboard/admin-dashboard.css">
+</head>
+<body>
+
+    <div id="authWrapper" class="auth-wrapper hidden">
+        <div class="auth">
+            <h2>Admin Login</h2>
+            <p style="color:var(--muted)">Enter X-ADMIN-KEY</p>
+            <div style="position: relative;">
+                <input id="adminKey" type="password" placeholder="X-ADMIN-KEY">
+                <span id="eyeIcon" class="toggle-eye" onclick="togglePassword()">👁</span>
+            </div>
+            <br>
+            <button onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <div id="dashboard" class="dashboard hidden">
+        <nav class="navbar">
+            <div class="nav-brand">AI-TOOL-FINDER ADMIN DASHBOARD</div>
+            <button class="small danger" onclick="logout()">Logout</button>
+        </nav>
+
+        <aside class="sidebar">
+            <button id="nav-tools" class="nav-btn" onclick="showTools()">🛠 Tools Management</button>
+            <button id="nav-reviews" class="nav-btn" onclick="showReviews()">📝 Review Moderation</button>
+        </aside>
+
+        <main class="content">
+            <section id="toolsView" class="view hidden">
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h2 id="toolsMainTitle">Tools</h2>
+                        <div>
+                            <button id="addToolBtn" class="small" onclick="openToolModal()">+ Add Tool</button>
+                            <button id="backToToolsBtn" class="small secondary hidden" onclick="showTools()">← Back to Tools</button>
+                        </div>
+                    </div>
+                    <div id="toolsListWrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Name</th><th>Category</th><th>Pricing</th><th>Rating</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="toolsTable"></tbody>
+                        </table>
+                    </div>
+                    <div id="inlineReviewsWrapper" class="hidden">
+                        <table>
+                            <thead>
+                                <tr><th>Rating</th><th>Comment</th><th>Status</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="inlineReviewsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="reviewsView" class="view hidden">
+                <div class="card">
+                    <h2>Global Moderation</h2>
+                    <div class="filter-bar">
+                        <div class="filter-btn active" onclick="filterReviews(this, '')">All</div>
+                        <div class="filter-btn" onclick="filterReviews(this, 'PENDING')">Pending</div>
+                        <div class="filter-btn" onclick="filterReviews(this, 'APPROVED')">Approved</div>
+                        <div class="filter-btn" onclick="filterReviews(this, 'REJECTED')">Rejected</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Tool</th><th>Rating</th><th>Comment</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="reviewsTable"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toolModal" class="modal-overlay hidden">
+        <div class="card modal-content">
+            <h3>Add New Tool</h3>
+            <input id="toolName" placeholder="Tool Name">
+            <input id="toolUseCase" placeholder="Use Case">
+            <input id="toolCategory" placeholder="Category">
+            <select id="toolPricing">
+                <option value="FREE">FREE</option>
+                <option value="PAID">PAID</option>
+                <option value="SUBSCRIPTION">SUBSCRIPTION</option>
+            </select>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeToolModal()">Cancel</button>
+                <button onclick="createTool()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="updateToolModal" class="modal-overlay hidden">
+        <div class="card modal-content">
+            <h3>Update Tool</h3>
+            <input id="updateToolName" placeholder="Tool Name">
+            <input id="updateToolUseCase" placeholder="Use Case">
+            <input id="updateToolCategory" placeholder="Category">
+            <select id="updateToolPricing">
+                <option value="FREE">FREE</option>
+                <option value="PAID">PAID</option>
+                <option value="SUBSCRIPTION">SUBSCRIPTION</option>
+            </select>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeUpdateModal()">Cancel</button>
+                <button class="update-btn" onclick="updateTool()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/src/js/dashboard/dashboard.js"></script>
+</body>
+</html>

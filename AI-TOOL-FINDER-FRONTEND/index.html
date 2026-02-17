@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Finder</title>
+    <style>
+        :root {
+            /* Light theme colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #2d3748;
+            --border-color: #dddddd;
+            --shadow-color: rgba(0, 0, 0, 0.15);
+            --shadow-hover: rgba(0, 0, 0, 0.2);
+            --accent-primary: #000000;
+            --accent-hover: #333333;
+            --card-bg: #ffffff;
+            --badge-bg: #f0f0f0;
+            --badge-text: #2d3748;
+            --category-bg: #000000;
+            --category-text: #ffffff;
+            --free-bg: #c6f6d5;
+            --free-text: #22543d;
+            --paid-bg: #fed7d7;
+            --paid-text: #742a2a;
+            --error-bg: #ff4757;
+            --error-text: #ffffff;
+            --button-secondary-bg: #e0e0e0;
+            --button-secondary-text: #333333;
+            --button-secondary-hover-bg: #000000;
+            --button-secondary-hover-text: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme colors */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #f0f0f0;
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --shadow-hover: rgba(0, 0, 0, 0.7);
+            --accent-primary: #ffffff;
+            --accent-hover: #e0e0e0;
+            --card-bg: #252525;
+            --badge-bg: #3a3a3a;
+            --badge-text: #e0e0e0;
+            --category-bg: #ffffff;
+            --category-text: #000000;
+            --free-bg: #2d5a3d;
+            --free-text: #a7f3d0;
+            --paid-bg: #5a2d2d;
+            --paid-text: #fca5a5;
+            --error-bg: #dc2626;
+            --error-text: #ffffff;
+            --button-secondary-bg: #3a3a3a;
+            --button-secondary-text: #e0e0e0;
+            --button-secondary-hover-bg: #ffffff;
+            --button-secondary-hover-text: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 50px;
+            padding: 20px;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            transition: background 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .search-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 15px 30px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            max-width: 600px;
+            flex: 1;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            flex: 1;
+            padding: 5px 10px;
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .search-box svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-primary);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            padding: 50px;
+        }
+
+        .error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: box-shadow 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+
+        .tool-header {
+            margin-bottom: 20px;
+        }
+
+        .tool-name-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tool-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-tertiary);
+        }
+
+        .rating {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .tool-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tool-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tool-category {
+            display: inline-block;
+            background: var(--category-bg);
+            color: var(--category-text);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pricing-badge {
+            background: var(--badge-bg);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            color: var(--badge-text);
+            font-size: 0.75rem;
+        }
+
+        .pricing-badge.free {
+            background: var(--free-bg);
+            color: var(--free-text);
+        }
+
+        .pricing-badge.paid {
+            background: var(--paid-bg);
+            color: var(--paid-text);
+        }
+
+        .reviews-btn {
+            padding: 5px 12px;
+            background: var(--button-secondary-bg);
+            color: var(--button-secondary-text);
+            border: none;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .reviews-btn:hover {
+            background: var(--button-secondary-hover-bg);
+            color: var(--button-secondary-hover-text);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            padding: 50px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .filter-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .tool-card {
+                padding: 20px;
+            }
+
+            .tool-name-row {
+                flex-wrap: wrap;
+            }
+
+            .tool-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tool-left {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .reviews-btn {
+                width: 100%;
+                margin-top: 10px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/>
+                </svg>
+                <svg id="moonIcon" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+            <h1>AI Tools Finder</h1>
+        </header>
+
+        <div class="search-container">
+            <button class="filter-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 4.5H21M3 9.5H21M3 14.5H21M3 19.5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="7" cy="4.5" r="2" fill="currentColor"/>
+                    <circle cx="17" cy="9.5" r="2" fill="currentColor"/>
+                    <circle cx="12" cy="14.5" r="2" fill="currentColor"/>
+                    <circle cx="9" cy="19.5" r="2" fill="currentColor"/>
+                </svg>
+            </button>
+            <div class="search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search AI tools by name or category...">
+            </div>
+        </div>
+
+        <div id="content">
+            <div class="loading">Loading AI tools...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/tools';
+        let allTools = [];
+
+        // Theme management
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const html = document.documentElement;
+
+        // Initialize theme from localStorage or system preference
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+            setTheme(theme);
+        }
+
+        // Set theme
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            if (theme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        // Event listener for theme toggle
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        // Fetch tools from backend
+        async function fetchTools() {
+            try {
+                const response = await fetch(API_BASE_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Handle ToolsResponse structure
+                if (data.tools && Array.isArray(data.tools)) {
+                    allTools = data.tools;
+                    displayTools(allTools);
+                } else if (data.message) {
+                    // Backend returned a message (no tools)
+                    displayError(data.message);
+                } else {
+                    displayError('Unexpected response format from server');
+                }
+            } catch (error) {
+                displayError('Failed to load AI tools. Please make sure the backend server is running.');
+                console.error('Error fetching tools:', error);
+            }
+        }
+
+        // Display tools in the grid
+        function displayTools(tools) {
+            const contentDiv = document.getElementById('content');
+            
+            if (tools.length === 0) {
+                contentDiv.innerHTML = '<div class="no-results">No AI tools found</div>';
+                return;
+            }
+
+            const toolsGrid = document.createElement('div');
+            toolsGrid.className = 'tools-grid';
+
+            tools.forEach(tool => {
+                const card = createToolCard(tool);
+                toolsGrid.appendChild(card);
+            });
+
+            contentDiv.innerHTML = '';
+            contentDiv.appendChild(toolsGrid);
+        }
+
+        // Create a tool card
+        function createToolCard(tool) {
+            const card = document.createElement('div');
+            card.className = 'tool-card';
+            
+            // Handle rating
+            const rating = tool.rating || tool.averageRating || 'N/A';
+
+            // Use pricingType field from backend
+            const pricingType = tool.pricingType || 'N/A';
+            const pricingClass = pricingType.toLowerCase() === 'free' ? 'free' : 'paid';
+
+            card.innerHTML = `
+                <div class="tool-header">
+                    <div class="tool-name-row">
+                        <h2 class="tool-name">${tool.name || 'Unnamed Tool'}</h2>
+                        ${rating !== 'N/A' ? `<span class="rating">⭐ ${rating}</span>` : ''}
+                    </div>
+                    <div class="tool-info">
+                        <div class="tool-left">
+                            <span class="tool-category">${tool.category || 'General'}</span>
+                            <span class="pricing-badge ${pricingClass}">${pricingType}</span>
+                        </div>
+                        <button class="reviews-btn">
+                            Reviews
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Display error message
+        function displayError(message) {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                displayTools(allTools);
+                return;
+            }
+
+            const filtered = allTools.filter(tool => {
+                const name = (tool.name || '').toLowerCase();
+                const category = (tool.category || '').toLowerCase();
+                
+                return name.includes(searchTerm) || category.includes(searchTerm);
+            });
+
+            displayTools(filtered);
+        });
+
+        // Initialize
+        initTheme();
+        fetchTools();
+    </script>
+</body>
+</html>
